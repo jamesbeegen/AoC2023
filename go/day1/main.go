@@ -62,7 +62,7 @@ func part2(challengeData []string) int {
 
 func main() {
 	// Read data from input file
-	challengeData := utils.Input("input.txt")
+	challengeData := utils.Input()
 
 	// Print answers
 	utils.Answers(strconv.Itoa(part1(challengeData)), strconv.Itoa(part2(challengeData)))

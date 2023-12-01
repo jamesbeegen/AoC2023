@@ -7,8 +7,8 @@ import (
 )
 
 // Reads the file into a string array
-func Input(fileName string) []string {
-	fileContent, err := os.ReadFile(fileName)
+func Input() []string {
+	fileContent, err := os.ReadFile("input.txt")
 	if err != nil {
 		panic(err)
 	}
