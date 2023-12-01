@@ -75,11 +75,7 @@ func main() {
 	// Read data from input file
 	challengeData := readFile("input.txt")
 
-	// Get the answers
-	answer1 := part1(challengeData)
-	answer2 := part2(challengeData)
-
 	// Print answers
-	fmt.Println("Part 1 Answer:", answer1)
-	fmt.Println("Part 2 Answer:", answer2)
+	fmt.Println("Part 1 Answer:", part1(challengeData))
+	fmt.Println("Part 2 Answer:", part2(challengeData))
 }
