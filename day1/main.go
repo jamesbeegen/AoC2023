@@ -1,21 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"os"
 	"strconv"
 	"strings"
+	"utils"
 )
-
-// Reads the file into a string array
-func readFile(fileName string) []string {
-	fileContent, err := os.ReadFile(fileName)
-	if err != nil {
-		panic(err)
-	}
-
-	return strings.Split(string(fileContent), "\n")
-}
 
 // Performs part 1 of the challenge
 func part1(challengeData []string) int {
@@ -33,7 +22,7 @@ func part1(challengeData []string) int {
 			}
 			lastInt = i
 		}
-		sum += ((firstInt*10) + lastInt)
+		sum += ((firstInt * 10) + lastInt)
 	}
 
 	return sum
@@ -46,7 +35,7 @@ func part2(challengeData []string) int {
 
 	// Value mapping - preserve the first and last char
 	// e.g. 'sevenine' should be replaced with 's7nine' so the 'nine' still gets replaced
-	var m = map[string]string {
+	var m = map[string]string{
 		"one":   "o1e",
 		"two":   "t2o",
 		"three": "t3e",
@@ -66,16 +55,15 @@ func part2(challengeData []string) int {
 		}
 		newLines = append(newLines, newLine)
 	}
-	
+
 	// Reuse part1 logic
 	return part1(newLines)
 }
 
 func main() {
 	// Read data from input file
-	challengeData := readFile("input.txt")
+	challengeData := utils.Input("input.txt")
 
 	// Print answers
-	fmt.Println("Part 1 Answer:", part1(challengeData))
-	fmt.Println("Part 2 Answer:", part2(challengeData))
+	utils.Answers(strconv.Itoa(part1(challengeData)), strconv.Itoa(part2(challengeData)))
 }
