@@ -37,9 +37,10 @@ func games(challengeData []string) []game {
 
 		// Get the draws
 		draws := strings.Split(parts[1], ";")
-		for i,_ := range draws {
+		for i := range draws {
 			draws[i] = strings.ReplaceAll(draws[i], " ", "")
 		}
+
 		// Instantiate game struct
 		game.id = id
 		game.draws = draws
@@ -52,9 +53,13 @@ func games(challengeData []string) []game {
 	return games
 }
 
-func part1(challengeData []string) int {
+func solve(challengeData []string, part2 bool) int {
+	// Get the games into structs
 	var games = games(challengeData)
+
+	// Array holding ids of possible games
 	var possibleIds []int
+
 	// Max values 
 	var maxes = map[string]int{
 		"red": 12,
@@ -62,9 +67,20 @@ func part1(challengeData []string) int {
 		"blue": 14,
 	}
 
+	// Holds the powers for part2
+	var powers []int
+
 	// Loop through games
 	for _,game := range games {
+		// The max number that were drawn
+		redMax := 0
+		blueMax := 0
+		greenMax := 0
+
+		// Is the game possible
 		possible := true
+
+		// Loop through all of the draws
 		for _,draw := range game.draws {
 			vals := strings.Split(draw, ",")
 			for _,val := range vals {
@@ -76,6 +92,11 @@ func part1(challengeData []string) int {
 							if numDrawn > maxes["blue"] {
 								possible = false
 							}
+							if part2 {
+								if numDrawn > blueMax {
+									blueMax = numDrawn
+								}
+							}
 						}
 					}
 				} else if strings.Contains(val, "red") {
@@ -84,6 +105,11 @@ func part1(challengeData []string) int {
 							numDrawn, _ := strconv.Atoi(val[:i])
 							if numDrawn > maxes["red"] {
 								possible = false
+							}
+							if part2 {
+								if numDrawn > redMax {
+									redMax = numDrawn
+								}
 							}
 						}
 					}
@@ -94,10 +120,18 @@ func part1(challengeData []string) int {
 							if numDrawn > maxes["green"] {
 								possible = false
 							}
+							if part2 {
+								if numDrawn > greenMax {
+									greenMax = numDrawn
+								}
+							}
 						}
 					}
 				}
 			}
+		}
+		if part2 {
+			powers = append(powers, blueMax*redMax*greenMax)
 		}
 
 		// If the game is possible, add its id to a list
@@ -107,15 +141,17 @@ func part1(challengeData []string) int {
 	}
 
 	sum := 0
-	for _,id := range possibleIds {
-		sum += id
+	if part2 {
+		for _,power := range powers {
+			sum += power
+		}
+	} else {
+		for _,id := range possibleIds {
+			sum += id
+		}
 	}
 	
 	return sum
-}
-
-func part2(challengeData []string) int {
-	return 1
 }
 
 func main() {
@@ -123,5 +159,5 @@ func main() {
 	challengeData := utils.Input()
 
 	// Print answers
-	utils.Answers(strconv.Itoa(part1(challengeData)), strconv.Itoa(part2(challengeData)))
+	utils.Answers(strconv.Itoa(solve(challengeData, false)), strconv.Itoa(solve(challengeData, true)))
 }
