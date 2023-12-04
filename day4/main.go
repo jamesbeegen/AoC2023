@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"slices"
 	"strconv"
 	"strings"
@@ -12,7 +11,8 @@ type card struct {
 	id				int
 	winningNums		[]int
 	scratchedNums	[]int
-	numMatches			int
+	numMatches		int
+	instances		int
 }
 
 func createCard(line string) card {
@@ -20,10 +20,10 @@ func createCard(line string) card {
 
 	// Split line by colon
 	lineParts := strings.Split(line, ":")
-	fmt.Println(lineParts[0])
 
 	// Get card id
-	id,_ := strconv.Atoi(strings.Split(lineParts[0], " ")[1])
+	subParts := strings.Split(lineParts[0], " ")
+	id,_ := strconv.Atoi(subParts[len(subParts)-1])
 	card.id = id
 
 	// Split the numbers portion of the line
@@ -94,9 +94,51 @@ func part1(challengeData []string) int {
 	return sum
 }
 
+func copies(cards []card, cardsMap map[int]card, ) []card {
+	var newCards []card
+
+	for _,thisCard := range cards {
+		for i := 1; i <= thisCard.numMatches; i++ {
+			new_card := cardsMap[thisCard.id + i]
+			newCards = append(newCards, new_card)
+		}
+	}
+	
+	return newCards
+}
+
 func part2(challengeData []string) int {
-	sum := 0
-	return sum
+	var cards []card
+	cardsMap :=  make(map[int]card)
+
+	// Get all of the original cards
+	for _,line := range challengeData {
+		if len(line) == 0 {
+			continue
+		}
+
+		// Create a card
+		card := createCard(line)
+		
+		// Get number of matches
+		card.numMatches = card.matches()
+
+		// Add card to list and map
+		cardsMap[card.id] = card
+		cards = append(cards, card)
+	}
+	
+	// Vars for pseudo-recursion below
+	totalCards := len(cards)
+	newCards := cards
+
+	// Pseudo-recursive method to get copies of cards, adding to total
+	for len(newCards) > 0 {
+		newCards = copies(newCards, cardsMap)
+		totalCards += len(newCards)
+	}
+	
+	return totalCards
 }
 
 func main() {
