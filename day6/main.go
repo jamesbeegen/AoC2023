@@ -7,7 +7,7 @@ import (
 )
 
 
-func getLineData(line string) []int {
+func getLineData(line string, part2 bool) []int {
 	var datas []int
 
 	// Split line by colon
@@ -25,13 +25,28 @@ func getLineData(line string) []int {
 		datas = append(datas, data)
 	}
 
+	if part2 {
+		// Append all individual data to a single data unit
+		newData := ""
+		for _,data := range datas {
+			newData += strconv.Itoa(data)
+		}
+
+		// Clear the original datas slice
+		datas = nil
+
+		// Append the single data unit to the slice
+		singleInt, _ := strconv.Atoi(newData)
+		datas = append(datas, singleInt)
+	}
+
 	return datas
 }
 
-func part1(challengeData []string) int {
+func solve(challengeData []string, part2 bool) int {
 	// Get the times and distances
-	times := getLineData(challengeData[0])
-	distances := getLineData(challengeData[1])
+	times := getLineData(challengeData[0], part2)
+	distances := getLineData(challengeData[1], part2)
 
 	// Holds the number of ways to win
 	var waysToWin []int
@@ -69,15 +84,10 @@ func part1(challengeData []string) int {
 	return total
 }
 
-func part2(challengeData []string) int {
-	return 0
-}
-
-
 func main() {
 	// Read data from input file
 	challengeData := utils.Input()
 
 	// Print answers
-	utils.Answers(strconv.Itoa(part1(challengeData)), strconv.Itoa(part2(challengeData)))
+	utils.Answers(strconv.Itoa(solve(challengeData, false)), strconv.Itoa(solve(challengeData, true)))
 }
